@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex justify-between items-start mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">{{ cliente.nome }}</h2>
+    <p class="text-slate-400">{{ cliente.empresa }} · {{ cliente.email }} · {{ cliente.telefone }}</p>
+  </div>
+  <div class="flex gap-2">
+    <a href="/clientes/{{ cliente.id }}/editar"    class="btn-primary">✏️ Editar</a>
+    <a href="/clientes/{{ cliente.id }}/interacao" class="btn-primary" style="background:#22c55e">💬 Interação</a>
+    <form method="POST" action="/clientes/{{ cliente.id }}/deletar"
+          onsubmit="return confirm('Remover cliente?')">
+      <button class="btn-danger">🗑️ Remover</button>
+    </form>
+  </div>
+</div>
+
+<!-- Info cards -->
+<div class="grid grid-cols-3 gap-4 mb-8">
+  <div class="card text-center">
+    <span class="badge-{{ cliente.status.lower() }} text-base px-4 py-1">{{ cliente.status }}</span>
+    <p class="text-slate-400 text-sm mt-2">Status</p>
+  </div>
+  <div class="card text-center">
+    <p class="text-2xl font-bold text-emerald-400">R$ {{ "%.2f"|format(cliente.valor_deal) }}</p>
+    <p class="text-slate-400 text-sm mt-1">Valor do Deal</p>
+  </div>
+  <div class="card text-center">
+    <p class="text-2xl font-bold text-indigo-400">{{ cliente.interacoes|length }}</p>
+    <p class="text-slate-400 text-sm mt-1">Interações</p>
+  </div>
+</div>
+
+<!-- Histórico de interações -->
+<div class="card">
+  <h3 class="font-semibold mb-4 text-slate-300">Histórico de Interações</h3>
+  {% if cliente.interacoes %}
+    <div class="flex flex-col gap-3">
+    {% for i in cliente.interacoes|sort(attribute='data', reverse=True) %}
+      <div class="border-l-4 border-indigo-500 pl-4 py-1">
+        <div class="flex justify-between items-center">
+          <span class="font-medium text-indigo-300">{{ i.tipo }}</span>
+          <span class="text-xs text-slate-500">{{ i.data.strftime("%d/%m/%Y %H:%M") }}</span>
+        </div>
+        <p class="text-slate-300 text-sm mt-1">{{ i.nota }}</p>
+      </div>
+    {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-slate-500 text-sm">Nenhuma interação registrada ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

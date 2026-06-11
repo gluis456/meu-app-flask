@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRM System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { background-color: #0f172a; color: #e2e8f0; }
+    .card { background-color: #1e293b; border-radius: 12px; padding: 1.5rem; }
+    .btn-primary { background-color: #6366f1; color: white; padding: .5rem 1.2rem; border-radius: 8px; }
+    .btn-primary:hover { background-color: #4f46e5; }
+    .btn-danger { background-color: #ef4444; color: white; padding: .5rem 1.2rem; border-radius: 8px; }
+    .badge-lead    { background:#6366f1; color:white; padding:2px 10px; border-radius:99px; font-size:.75rem; }
+    .badge-ativo   { background:#22c55e; color:white; padding:2px 10px; border-radius:99px; font-size:.75rem; }
+    .badge-inativo { background:#f59e0b; color:white; padding:2px 10px; border-radius:99px; font-size:.75rem; }
+    input, select, textarea {
+      background:#0f172a; border:1px solid #334155; color:#e2e8f0;
+      border-radius:8px; padding:.5rem .75rem; width:100%;
+    }
+    input:focus, select:focus, textarea:focus { outline:2px solid #6366f1; }
+    table { width:100%; border-collapse:collapse; }
+    th { background:#0f172a; padding:.75rem 1rem; text-align:left; font-size:.8rem; color:#94a3b8; text-transform:uppercase; }
+    td { padding:.75rem 1rem; border-bottom:1px solid #1e293b; }
+    tr:hover td { background:#1e293b; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Sidebar -->
+  <div class="flex">
+    <aside class="w-56 min-h-screen bg-[#1e293b] p-6 flex flex-col gap-2 fixed">
+      <h1 class="text-xl font-bold text-indigo-400 mb-6">⚡ CRM System</h1>
+      <a href="/"              class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-[#334155]">🏠 Dashboard</a>
+      <a href="/clientes"      class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-[#334155]">👥 Clientes</a>
+      <a href="/clientes/novo" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-[#334155]">➕ Novo Cliente</a>
+      <div class="mt-auto pt-6 border-t border-slate-700">
+        <p class="text-xs text-slate-500">Exportar</p>
+        <a href="/exportar/clientes/excel"    class="block text-sm p-2 hover:text-indigo-400">📊 Clientes Excel</a>
+        <a href="/exportar/clientes/csv"      class="block text-sm p-2 hover:text-indigo-400">📄 Clientes CSV</a>
+        <a href="/exportar/interacoes/excel"  class="block text-sm p-2 hover:text-indigo-400">💬 Interações Excel</a>
+      </div>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="ml-56 flex-1 p-8">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="mb-4 p-3 rounded-lg {% if cat == 'success' %}bg-green-900 text-green-200{% else %}bg-yellow-900 text-yellow-200{% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

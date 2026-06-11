@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-2">Nova Interação</h2>
+<p class="text-slate-400 mb-6">Cliente: <strong>{{ cliente.nome }}</strong></p>
+
+<div class="card max-w-xl">
+  <form method="POST" class="flex flex-col gap-4">
+
+    <div>
+      <label class="text-sm text-slate-400">Tipo</label>
+      <select name="tipo">
+        <option>Ligação</option>
+        <option>E-mail</option>
+        <option>Reunião</option>
+        <option>WhatsApp</option>
+        <option>Outro</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="text-sm text-slate-400">Anotação</label>
+      <textarea name="nota" rows="4" placeholder="Descreva o que foi discutido..."></textarea>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <input type="checkbox" name="enviar_email" id="enviar_email"
+             style="width:auto" class="w-4 h-4"/>
+      <label for="enviar_email" class="text-sm text-slate-400">
+        Enviar e-mail de follow-up para {{ cliente.email }}
+      </label>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit" class="btn-primary">Registrar</button>
+      <a href="/clientes/{{ cliente.id }}" class="btn-primary" style="background:#334155">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

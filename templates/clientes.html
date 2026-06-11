@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-2xl font-bold">Clientes</h2>
+  <a href="/clientes/novo" class="btn-primary">+ Novo Cliente</a>
+</div>
+
+<!-- Filtros -->
+<form method="GET" class="card flex gap-4 mb-6 items-end">
+  <div class="flex-1">
+    <label class="text-sm text-slate-400">Buscar</label>
+    <input name="q" value="{{ q }}" placeholder="Nome ou empresa..."/>
+  </div>
+  <div>
+    <label class="text-sm text-slate-400">Status</label>
+    <select name="status">
+      <option value="">Todos</option>
+      <option value="Lead"    {% if status=="Lead"    %}selected{% endif %}>Lead</option>
+      <option value="Ativo"   {% if status=="Ativo"   %}selected{% endif %}>Ativo</option>
+      <option value="Inativo" {% if status=="Inativo" %}selected{% endif %}>Inativo</option>
+    </select>
+  </div>
+  <button type="submit" class="btn-primary">Filtrar</button>
+</form>
+
+<!-- Tabela -->
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th><th>Empresa</th><th>E-mail</th>
+        <th>Telefone</th><th>Status</th><th>Deal</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for c in clientes %}
+      <tr>
+        <td><a href="/clientes/{{ c.id }}" class="text-indigo-400 hover:underline">{{ c.nome }}</a></td>
+        <td>{{ c.empresa }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.telefone }}</td>
+        <td><span class="badge-{{ c.status.lower() }}">{{ c.status }}</span></td>
+        <td>R$ {{ "%.2f"|format(c.valor_deal) }}</td>
+        <td class="flex gap-2">
+          <a href="/clientes/{{ c.id }}/editar" class="text-indigo-400 text-sm hover:underline">Editar</a>
+          <form method="POST" action="/clientes/{{ c.id }}/deletar"
+                onsubmit="return confirm('Remover cliente?')">
+            <button class="text-red-400 text-sm hover:underline">Remover</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="text-center text-slate-500 py-8">Nenhum cliente encontrado.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

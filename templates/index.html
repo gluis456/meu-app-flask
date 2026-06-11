@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+
+<!-- KPIs -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="card text-center">
+    <p class="text-3xl font-bold text-indigo-400">{{ total }}</p>
+    <p class="text-slate-400 text-sm mt-1">Total de Clientes</p>
+  </div>
+  <div class="card text-center">
+    <p class="text-3xl font-bold text-indigo-400">{{ leads }}</p>
+    <p class="text-slate-400 text-sm mt-1">Leads</p>
+  </div>
+  <div class="card text-center">
+    <p class="text-3xl font-bold text-green-400">{{ ativos }}</p>
+    <p class="text-slate-400 text-sm mt-1">Ativos</p>
+  </div>
+  <div class="card text-center">
+    <p class="text-3xl font-bold text-emerald-400">R$ {{ "%.2f"|format(total_deal) }}</p>
+    <p class="text-slate-400 text-sm mt-1">Total em Deals</p>
+  </div>
+</div>
+
+<!-- Gráficos -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+  <div class="card"><div id="g_status"></div></div>
+  <div class="card"><div id="g_interacoes"></div></div>
+  <div class="card"><div id="g_deals"></div></div>
+</div>
+
+<!-- Recentes -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="card">
+    <h3 class="font-semibold mb-4 text-slate-300">Clientes Recentes</h3>
+    <table>
+      <thead><tr><th>Nome</th><th>Status</th><th>Empresa</th></tr></thead>
+      <tbody>
+      {% for c in recentes %}
+        <tr>
+          <td><a href="/clientes/{{ c.id }}" class="text-indigo-400 hover:underline">{{ c.nome }}</a></td>
+          <td><span class="badge-{{ c.status.lower() }}">{{ c.status }}</span></td>
+          <td>{{ c.empresa }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 class="font-semibold mb-4 text-slate-300">Últimas Interações</h3>
+    <table>
+      <thead><tr><th>Cliente</th><th>Tipo</th><th>Data</th></tr></thead>
+      <tbody>
+      {% for i in ultimas %}
+        <tr>
+          <td><a href="/clientes/{{ i.cliente.id }}" class="text-indigo-400 hover:underline">{{ i.cliente.nome }}</a></td>
+          <td>{{ i.tipo }}</td>
+          <td class="text-slate-400 text-sm">{{ i.data.strftime("%d/%m/%Y") }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  Plotly.newPlot("g_status",      {{ g_status|safe }}.data,      {{ g_status|safe }}.layout,      {responsive:true, displayModeBar:false});
+  Plotly.newPlot("g_interacoes",  {{ g_interacoes|safe }}.data,  {{ g_interacoes|safe }}.layout,  {responsive:true, displayModeBar:false});
+  Plotly.newPlot("g_deals",       {{ g_deals|safe }}.data,       {{ g_deals|safe }}.layout,        {responsive:true, displayModeBar:false});
+</script>
+{% endblock %}
